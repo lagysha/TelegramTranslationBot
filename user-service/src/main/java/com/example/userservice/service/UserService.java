@@ -24,4 +24,9 @@ public class UserService {
 
         return userMapper.userToUserDto(user);
     }
+
+    public UserDto createUser(User user) {
+        User persistedUser = userRepository.save(user);
+        return userMapper.userToUserDto(user);
+    }
 }
