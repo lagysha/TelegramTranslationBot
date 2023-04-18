@@ -14,7 +14,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {
-        System.out.println("hello");
         return userRepository.findByEmail(email).isEmpty();
     }
 }

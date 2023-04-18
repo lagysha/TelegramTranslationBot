@@ -1,6 +1,5 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.data.User;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.service.UserService;
 import jakarta.validation.Valid;
@@ -23,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody User user) {
-        UserDto dto = userService.createUser(user);
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        UserDto dto = userService.createUser(userDto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

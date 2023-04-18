@@ -9,6 +9,7 @@ CREATE TABLE users (
 );
 
 GRANT ALL PRIVILEGES ON TABLE users TO myUser;
+GRANT USAGE, SELECT ON SEQUENCE users_id_seq TO www;
 
 INSERT INTO users (username, email, password)
 VALUES ('mazurenko', 'mazurenko@gmail.com', '123456');

@@ -26,5 +26,9 @@ public class UserDto {
     private String username;
 
     @UniqueEmail
+    @NotBlank(message = "email can't be blank")
     private String email;
+
+    @NotBlank(message = "password can't be blank")
+    private String password;
 }

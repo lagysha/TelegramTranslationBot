@@ -25,7 +25,9 @@ public class UserService {
         return userMapper.userToUserDto(user);
     }
 
-    public UserDto createUser(User user) {
+    // TODO implement registration with auth & email services
+    public UserDto createUser(UserDto userDto) {
+        User user = userMapper.userDtotoUser(userDto);
         User persistedUser = userRepository.save(user);
         return userMapper.userToUserDto(user);
     }
