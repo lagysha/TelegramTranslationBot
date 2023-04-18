@@ -17,12 +17,11 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserDto getUserById(String username) {
+    public UserDto getUserByUsername(String username) {
         User user = userRepository.findUserByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException(String.format("User with username %s doesn't exist", username))
         );
 
-        //TODO mapstruct mapping and returning
         return userMapper.userToUserDto(user);
     }
 }
