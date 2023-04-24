@@ -5,8 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 
 @SpringBootApplication
+@EnableWebFluxSecurity
 public class ApiGatewayApplication {
 
     public static void main(String[] args) {
@@ -17,8 +19,8 @@ public class ApiGatewayApplication {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route(r -> r
-                        .path("/user/**")
-                        .uri("lb://USER-SERVICE"))
+                    .path("/user/**")
+                    .uri("lb://USER-SERVICE"))
                 .build();
     }
 }
