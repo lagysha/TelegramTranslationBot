@@ -26,6 +26,7 @@ public class UserService {
     }
 
     // TODO implement registration with auth & email services
+    // TODO implement email (with email-service) & password updates
     public UserDto createUser(UserDto userDto) {
         User user = userMapper.userDtotoUser(userDto);
         User persistedUser = userRepository.save(user);
