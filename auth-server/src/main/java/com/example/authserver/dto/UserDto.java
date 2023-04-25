@@ -38,6 +38,10 @@ public class UserDto implements UserDetails {
         return this.roles;
     }
 
+    public String getSilly() {
+        return "silly";
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

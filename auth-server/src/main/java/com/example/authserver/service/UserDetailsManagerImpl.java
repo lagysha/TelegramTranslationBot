@@ -65,7 +65,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         var user = userRepository.findByEmail(email).orElseThrow(
             () -> new UsernameNotFoundException("User with that email doesn't exist: " + email)
         );
-        return new User(user.getUsername(), user.getPassword(), user.getRoles());
+        return new User(user.getEmail(), user.getPassword(), user.getRoles());
     }
 
     @Override

@@ -8,6 +8,9 @@ CREATE TABLE roles (
 INSERT INTO roles (name)
 VALUES ('ROLE_USER'), ('ROLE_ADMIN');
 
+INSERT INTO roles (name, is_default)
+VALUES ('ROLE_VERIFIED', false);
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
@@ -21,10 +24,11 @@ CREATE TABLE users_roles (
 );
 
 ALTER TABLE users
-ADD COLUMN email_verified BOOLEAN NOT NULL DEFAULT FALSE;
+DROP COLUMN email_verified;
 
 ALTER TABLE roles
 ADD COLUMN is_default BOOLEAN NOT NULL DEFAULT FALSE;
 
 select * from roles;
+select * from users;
 update roles set is_default=true where id=1;

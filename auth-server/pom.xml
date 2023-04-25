@@ -71,6 +71,14 @@
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
+
+<!--        for jwt validation token -->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>security-utils</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

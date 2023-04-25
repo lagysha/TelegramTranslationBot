@@ -29,15 +29,24 @@ public class User {
 
     private String password;
 
-    private boolean emailVerified;
-
     @ToString.Exclude
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name="user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id")
     )
     private List<Role> roles;
+
+    /**
+        @param role must come without any prefix (e.g. "ROLE_")
+        @return boolean value: whether user has this role or not
+     */
+    public boolean hasRole(String role) {
+        return roles.stream()
+            .map (Role::getName)
+            .map(roleName -> roleName.replace("ROLE_", ""))
+            .anyMatch(clearRoleName -> clearRoleName.equals(role));
+    }
 
 }
