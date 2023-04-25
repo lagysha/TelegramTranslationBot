@@ -22,3 +22,9 @@ CREATE TABLE users_roles (
 
 ALTER TABLE users
 ADD COLUMN email_verified BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE roles
+ADD COLUMN is_default BOOLEAN NOT NULL DEFAULT FALSE;
+
+select * from roles;
+update roles set is_default=true where id=1;

@@ -1,15 +1,13 @@
 package com.example.authserver.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
+@Table(name="roles")
 @Getter @Setter @ToString
 public class Role implements GrantedAuthority {
 
@@ -18,6 +16,8 @@ public class Role implements GrantedAuthority {
     private Long id;
 
     private String name;
+
+    private boolean isDefault;
 
     @Override
     public String getAuthority() {
