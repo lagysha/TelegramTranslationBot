@@ -4,13 +4,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.log4j.Log4j2;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -19,7 +19,6 @@ import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @Component
 @Log4j2
@@ -31,32 +30,29 @@ public class AuthTokenValidationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         var request = exchange.getRequest();
-        List<String> authToken = request.getHeaders().get("Authorization");
+        String jwt = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        if (authToken != null && !authToken.isEmpty()) {
-            String jwt = authToken.get(0);
-
+        if (jwt != null && !jwt.startsWith("Basic")) {
             try {
-                SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+                SecretKey key = Keys.hmacShaKeyFor(
+                        secretKey.getBytes(StandardCharsets.UTF_8));
 
                 Claims claims = Jwts.parserBuilder()
                         .setSigningKey(key)
                         .build()
-                        .parseClaimsJwt(jwt)
+                        .parseClaimsJws(jwt)
                         .getBody();
 
-                String jwtUsername = (String) claims.get("username");
+                String jwtUsername = String.valueOf(claims.get("username"));
                 String jwtAuthorities = (String) claims.get("authorities");
 
+                // Save Authentication details & manually set the SecurityContext containing the Authentication in the HTTP session
                 Authentication auth = new UsernamePasswordAuthenticationToken(jwtUsername, null,
                         AuthorityUtils.commaSeparatedStringToAuthorityList(jwtAuthorities));
 
-                SecurityContext securityContext = SecurityContextHolder.getContext();
-                securityContext.setAuthentication(auth);
-
-                log.info("auth success: " + jwtUsername);
-
-            } catch (Exception e) {
+                return chain.filter(exchange).contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
+            }
+            catch (Exception e) {
                 throw new BadCredentialsException("Invalid token received!" + e.getMessage());
             }
         }

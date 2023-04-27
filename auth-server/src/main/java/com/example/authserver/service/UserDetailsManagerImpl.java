@@ -46,7 +46,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         Authentication currentUser = this.securityContextHolderStrategy.getContext().getAuthentication();
         String userPassword = currentUser.getCredentials().toString();
 
-        if (passwordEncoder.matches(oldPassword, newPassword)) {
+        if (passwordEncoder.matches(oldPassword, userPassword)) {
             var user = userRepository.findByEmail(currentUser.getName()).orElseThrow();
             user.setPassword(passwordEncoder.encode(newPassword));
         }

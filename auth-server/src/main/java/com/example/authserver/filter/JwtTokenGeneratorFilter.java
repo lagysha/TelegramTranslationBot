@@ -44,7 +44,7 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
                     .compact();
 
             response.setHeader("Authorization", jwt);
-            log.info("Setting jwt token in Authorization header");
+            log.info("Setting jwt token in Authorization header: " + jwt);
         }
 
         filterChain.doFilter(request, response);
