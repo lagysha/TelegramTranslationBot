@@ -48,7 +48,6 @@ public class SecurityConfig {
     JwtTokenValidationFilter jwtTokenValidationFilter() {
         var token = new JwtTokenValidationFilter();
         token.setJwtKey(jwtKey);
-        log.info("token:" + token.getJwtKey());
         return token;
     }
 

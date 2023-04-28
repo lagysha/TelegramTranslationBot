@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,5 +29,20 @@ public class AuthController {
     public ResponseEntity<UserDto> getAuthenticatedUser(Authentication authentication) {
         var userDto = userService.findByEmail(authentication.getName());
         return ResponseEntity.ok(userDto);
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<String> changeAuthenticatedUserPassword(
+                                                    @RequestParam("oldPassword") String oldPassword,
+                                                    @RequestParam("newPassword") String newPassword) {
+        userService.changePassword(oldPassword, newPassword);
+        return ResponseEntity.ok("User password successfully changed");
+    }
+
+    @DeleteMapping("/user/{email}")
+    @PreAuthorize("#email == authentication.principal.username OR hasRole(ROLE_ADMIN)")
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
+        userService.deleteAuthenticatedUser(email);
+        return ResponseEntity.ok("User was successfully deleted");
     }
 }

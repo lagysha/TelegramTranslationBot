@@ -32,4 +32,12 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("user was not found: " + email));
         return userMapper.userToUserDto(user);
     }
+
+    public void changePassword(String oldPassword, String newPassword) {
+        userDetailsManager.changePassword(oldPassword, newPassword);
+    }
+
+    public void deleteAuthenticatedUser(String email) {
+        userDetailsManager.deleteUser(email);
+    }
 }

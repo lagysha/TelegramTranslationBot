@@ -18,9 +18,8 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) throws Exception {
         // authorize requests
         http.authorizeExchange()
-                .pathMatchers("/silly").authenticated()
                 .pathMatchers("/user/**").authenticated()
-                .pathMatchers("/auth/user").authenticated()
+                .pathMatchers("/auth/user").permitAll()
                 .pathMatchers("/auth/register").permitAll();
 
         // filters
