@@ -26,15 +26,8 @@ public class TelegramBot extends TelegramWebhookBot {
 
     private UpdateProcessor updateProcessor;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public TelegramBot(UpdateProcessor updateProcessor) {
-=======
-=======
->>>>>>> 3a0df4f (fix telegramBot dependencies)
     @Autowired
     public void setUpdateProcessor(@Lazy UpdateProcessor updateProcessor) {
->>>>>>> 82d0ac8 (add user dtos & mappers & endpoint to retrieve a user by id)
         this.updateProcessor = updateProcessor;
     }
 
@@ -45,7 +38,6 @@ public class TelegramBot extends TelegramWebhookBot {
                     .url(botUri)
                     .build();
             this.setWebhook(setWebHook);
-            //TODO : here send message to user like - To start using bot type /start
         } catch (TelegramApiException e) {
             // Maybe log this
             System.out.println(e.getCause() +" " + e.getMessage());
