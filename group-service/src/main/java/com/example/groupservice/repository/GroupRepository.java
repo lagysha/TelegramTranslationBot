@@ -10,23 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface GroupRepository extends MongoRepository<Group,String> {
-
-    @Aggregation(pipeline = {
-            "{ '$match': { 'result.username' : {'$regex': ?0} } }",
-            "{ '$limit' : 5 }"
-    })
-    List<Group> findByGroupNameWithRegex(String groupName);
-
-    @Aggregation(pipeline = {
-            "{ '$match': { 'result.username' : ?0 } }",
-    })
-    Optional<Group> findByGroupName(String groupName);
-
     @Aggregation(pipeline = {
             "{ '$match': { 'result.id' : ?0 } }",
     })
     Optional<Group> findByGroupId(Long id);
-
-
-    List<Group> findByAdminId(Long id);
 }

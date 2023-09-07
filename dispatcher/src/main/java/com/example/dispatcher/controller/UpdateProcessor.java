@@ -89,7 +89,6 @@ public class UpdateProcessor {
     public void processTextMessage(Update update) {
 
         System.out.println("ProcessTextMessage");
-        //Maybe With This Shit We Cannot track User State?
         UserDto appUser = messageProcessorService.findAppUser(update);
         if (appUser == null) {
             appUser = messageProcessorService.registerUser(update);

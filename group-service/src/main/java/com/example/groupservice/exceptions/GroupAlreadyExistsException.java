@@ -9,4 +9,7 @@ public class GroupAlreadyExistsException extends RuntimeException{
     public GroupAlreadyExistsException(String message, Throwable cause) {
         super(message, cause);
     }
+    public GroupAlreadyExistsException(String message) {
+        super(message);
+    }
 }

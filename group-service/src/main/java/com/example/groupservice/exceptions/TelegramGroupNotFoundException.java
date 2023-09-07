@@ -9,4 +9,8 @@ public class TelegramGroupNotFoundException extends RuntimeException{
     public TelegramGroupNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public TelegramGroupNotFoundException(String message) {
+        super(message);
+    }
 }

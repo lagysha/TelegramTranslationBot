@@ -15,20 +15,11 @@ import java.util.List;
 
 public interface MessageProcessor {
 
-    String getGroupsByName(String groupName);
-
-    String getUserGroups(Update update);
-
     UserDto registerUser(Update update);
 
     UserDto findAppUser(Update update);
 
-    GroupDto saveGroupByName(String groupName,
-                             Long adminId);
-
-    GroupDto findGroupByName(String groupName);
-
-    String verifyGroup(String name);
+    UserDto updateUser(RequestUser requestUser);
 
     GroupDto findGroupById(Long id);
 
@@ -40,6 +31,4 @@ public interface MessageProcessor {
     Object addSetting(TranslationSettingDto translationSettingDto);
 
     List<LangType> getLangTypes();
-
-    UserDto updateUser(RequestUser requestUser);
 }
