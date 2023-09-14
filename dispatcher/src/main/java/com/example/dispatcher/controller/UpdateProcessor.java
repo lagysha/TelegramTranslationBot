@@ -37,13 +37,12 @@ public class UpdateProcessor {
 
     public void processUpdate(Update update) {
         if (update == null) {
-            // Maybe log
-            System.out.println("Null Update: " + update);
+            log.error("Null Update: " + update);
         } else if (update.hasMessage()) {
-            System.out.println("Update: " + update);
+            log.info("Received Update: " + update);
             distributeMessageByType(update);
         } else {
-            System.out.println("Unsupported message type is received: " + update);
+            log.error("Unsupported message type is received: " + update);
         }
     }
 
@@ -88,7 +87,6 @@ public class UpdateProcessor {
 
     public void processTextMessage(Update update) {
 
-        System.out.println("ProcessTextMessage");
         UserDto appUser = messageProcessorService.findAppUser(update);
         if (appUser == null) {
             appUser = messageProcessorService.registerUser(update);
@@ -102,7 +100,6 @@ public class UpdateProcessor {
         var output = "";
         var nextUserAction = appUser.getNextAction();
 
-        System.out.println(nextUserAction);
         if (STOP.equals(Command.fromValue(update.getMessage().getText()))) {
             setUserAction(appUser,NextAction.NONE);
             output = "Translating Stopped!";
@@ -113,30 +110,32 @@ public class UpdateProcessor {
                 return;
             }
         } else if (nextUserAction.equals(NextAction.CONFIGURE_LANGUAGES)) {
-            System.out.println("Received configure language");
             var message = update.getMessage().getText();
             String  languageFrom;
             String languageTo;
-            try {
-                Matcher matcherFrom = Pattern.compile("(?<=from=)([a-zA-z]{2})").matcher(message);
-                Matcher matcherTo = Pattern.compile("(?<=to=)([a-zA-z]{2})").matcher(message);
-                matcherFrom.find();
-                matcherTo.find();
-                languageFrom = matcherFrom.group();
-                languageTo = matcherTo.group();
-                messageProcessorService.addSetting(
-                        TranslationSettingDto
-                                .builder()
-                                .fromLangCode(languageFrom)
-                                .toLangCode(languageTo)
-                                .groupId(groupId)
-                                .build()
-                );
-                setUserAction(appUser,NextAction.TRANSLATE);
-                output = "Languages were successfully configured!";
-            }catch (Exception e){
+            Matcher matcherFrom = Pattern.compile("(?<=from=)([a-zA-z]{2})").matcher(message);
+            Matcher matcherTo = Pattern.compile("(?<=to=)([a-zA-z]{2})").matcher(message);
+            if(matcherFrom.groupCount() != 1 || matcherTo.groupCount() != 1){
                 setUserAction(appUser,NextAction.NONE);
-                setAnswerMessageTypeView(update, "You are moron!");
+                output = "Wrong input! Check your data format";
+            }else {
+                languageFrom = matcherFrom.group(0);
+                languageTo = matcherTo.group(0);
+                try {
+                    messageProcessorService.addSetting(
+                            TranslationSettingDto
+                                    .builder()
+                                    .fromLangCode(languageFrom)
+                                    .toLangCode(languageTo)
+                                    .groupId(groupId)
+                                    .build()
+                    );
+                    setUserAction(appUser, NextAction.TRANSLATE);
+                    output = "Languages were successfully configured!";
+                } catch (Exception e) {
+                    setUserAction(appUser, NextAction.NONE);
+                    output = "Translate API is busy now!";
+                }
             }
         } else {
             output = processServiceCommand(update, appUser);
@@ -178,7 +177,7 @@ public class UpdateProcessor {
         } else if (LANGUAGE.equals(serviceCommand)) {
             setUserAction(appUser,NextAction.CONFIGURE_LANGUAGES);
             return "Write to languages in a format -> from=language to=language\n"
-                    + "For example:from=en to=ua";
+                    + "For example:from=en to=uk";
         } else if (LIST.equals(serviceCommand)) {
             List<LangType> langTypes = messageProcessorService.getLangTypes();
             String output = "Languages and code: \n";
