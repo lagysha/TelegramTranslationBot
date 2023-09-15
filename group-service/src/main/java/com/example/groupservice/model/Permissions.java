@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class Permissions{
     private boolean can_send_messages;
     private boolean can_send_media_messages;
