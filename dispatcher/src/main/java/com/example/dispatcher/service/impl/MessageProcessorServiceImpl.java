@@ -37,15 +37,13 @@ public class MessageProcessorServiceImpl implements MessageProcessor {
         User telegramUser = update.getMessage().getFrom();
         RequestUser requestUser = userMapper.telegramUserToRequestUser(telegramUser);
         requestUser.setNextAction(NextAction.NONE);
-        var response = userApiClient.saveUser(requestUser);
-        return response.getBody();
+        return userApiClient.saveUser(requestUser);
     }
 
     @Override
     public UserDto findAppUser(Update update) {
         Long userTelegramId = update.getMessage().getFrom().getId();
-        var response = userApiClient.getUserByTelegramId(userTelegramId);
-        return response.getBody();
+        return userApiClient.getUserByTelegramId(userTelegramId);
     }
 
     @Override
