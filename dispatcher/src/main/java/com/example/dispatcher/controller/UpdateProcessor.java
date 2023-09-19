@@ -8,19 +8,15 @@ import com.example.dispatcher.dto.TranslationSettingDto;
 import com.example.dispatcher.dto.UserDto;
 import com.example.dispatcher.service.impl.MessageProcessorServiceImpl;
 import com.example.dispatcher.utils.MessageUtils;
-import com.sun.jdi.event.ExceptionEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -37,17 +33,16 @@ public class UpdateProcessor {
 
     public void processUpdate(Update update) {
         if (update == null) {
-            // Maybe log
-            System.out.println("Null Update: " + update);
+            log.error("Null Update: " + update);
         } else if (update.hasMessage()) {
-            System.out.println("Update: " + update);
+            log.info("Received Update: " + update);
             distributeMessageByType(update);
         } else {
-            System.out.println("Unsupported message type is received: " + update);
+            log.error("Unsupported message type is received: " + update);
         }
     }
 
-    public void distributeMessageByType(Update update) {
+    private void distributeMessageByType(Update update) {
         var message = update.getMessage();
         if (message.hasText()) {
             processTextMessage(update);
@@ -86,10 +81,8 @@ public class UpdateProcessor {
         }
     }
 
-    public void processTextMessage(Update update) {
+    private void processTextMessage(Update update) {
 
-        System.out.println("ProcessTextMessage");
-        //Maybe With This Shit We Cannot track User State?
         UserDto appUser = messageProcessorService.findAppUser(update);
         if (appUser == null) {
             appUser = messageProcessorService.registerUser(update);
@@ -103,41 +96,42 @@ public class UpdateProcessor {
         var output = "";
         var nextUserAction = appUser.getNextAction();
 
-        System.out.println(nextUserAction);
         if (STOP.equals(Command.fromValue(update.getMessage().getText()))) {
-            setUserAction(appUser,NextAction.NONE);
+            setUserAction(appUser, NextAction.NONE);
             output = "Translating Stopped!";
         } else if (!update.getMessage().getText().startsWith("/") && nextUserAction.equals(NextAction.TRANSLATE)) {
             var message = update.getMessage().getText();
             output = messageProcessorService.translate(groupId, message);
-            if(output.isBlank()){
+            if (output.isBlank()) {
                 return;
             }
         } else if (nextUserAction.equals(NextAction.CONFIGURE_LANGUAGES)) {
-            System.out.println("Received configure language");
             var message = update.getMessage().getText();
-            String  languageFrom;
+            String languageFrom;
             String languageTo;
-            try {
-                Matcher matcherFrom = Pattern.compile("(?<=from=)([a-zA-z]{2})").matcher(message);
-                Matcher matcherTo = Pattern.compile("(?<=to=)([a-zA-z]{2})").matcher(message);
-                matcherFrom.find();
-                matcherTo.find();
-                languageFrom = matcherFrom.group();
-                languageTo = matcherTo.group();
-                messageProcessorService.addSetting(
-                        TranslationSettingDto
-                                .builder()
-                                .fromLangCode(languageFrom)
-                                .toLangCode(languageTo)
-                                .groupId(groupId)
-                                .build()
-                );
-                setUserAction(appUser,NextAction.TRANSLATE);
-                output = "Languages were successfully configured!";
-            }catch (Exception e){
-                setUserAction(appUser,NextAction.NONE);
-                setAnswerMessageTypeView(update, "You are moron!");
+            Matcher matcherFrom = Pattern.compile("(?<=from=)([a-zA-z]{2})").matcher(message);
+            Matcher matcherTo = Pattern.compile("(?<=to=)([a-zA-z]{2})").matcher(message);
+            if (matcherFrom.groupCount() != 1 || matcherTo.groupCount() != 1) {
+                setUserAction(appUser, NextAction.NONE);
+                output = "Wrong input! Check your data format";
+            } else {
+                languageFrom = matcherFrom.group(0);
+                languageTo = matcherTo.group(0);
+                try {
+                    messageProcessorService.addSetting(
+                            TranslationSettingDto
+                                    .builder()
+                                    .fromLangCode(languageFrom)
+                                    .toLangCode(languageTo)
+                                    .groupId(groupId)
+                                    .build()
+                    );
+                    setUserAction(appUser, NextAction.TRANSLATE);
+                    output = "Languages were successfully configured!";
+                } catch (Exception e) {
+                    setUserAction(appUser, NextAction.NONE);
+                    output = "Translate API is busy now!";
+                }
             }
         } else {
             output = processServiceCommand(update, appUser);
@@ -177,9 +171,9 @@ public class UpdateProcessor {
                     + "Then click on \"Manage group\""
                     + "Then click on \"Add Administrator\", chose bot and click save";
         } else if (LANGUAGE.equals(serviceCommand)) {
-            setUserAction(appUser,NextAction.CONFIGURE_LANGUAGES);
+            setUserAction(appUser, NextAction.CONFIGURE_LANGUAGES);
             return "Write to languages in a format -> from=language to=language\n"
-                    + "For example:from=en to=ua";
+                    + "For example:from=en to=uk";
         } else if (LIST.equals(serviceCommand)) {
             List<LangType> langTypes = messageProcessorService.getLangTypes();
             String output = "Languages and code: \n";
@@ -193,7 +187,7 @@ public class UpdateProcessor {
         }
     }
 
-    private void setUserAction(UserDto appUser,NextAction nextAction) {
+    private void setUserAction(UserDto appUser, NextAction nextAction) {
         appUser.setNextAction(nextAction);
         messageProcessorService.updateUser(RequestUser.builder()
                 .id(appUser.getTelegramUserId())

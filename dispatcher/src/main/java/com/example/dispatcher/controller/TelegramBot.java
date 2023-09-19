@@ -2,6 +2,7 @@ package com.example.dispatcher.controller;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 @RequiredArgsConstructor
+@Log4j
 public class TelegramBot extends TelegramWebhookBot {
 
     @Value("${bot.name}")
@@ -39,8 +41,7 @@ public class TelegramBot extends TelegramWebhookBot {
                     .build();
             this.setWebhook(setWebHook);
         } catch (TelegramApiException e) {
-            // Maybe log this
-            System.out.println(e.getCause() +" " + e.getMessage());
+            log.error(e.getCause() +" " + e.getMessage());
         }
     }
 
@@ -59,8 +60,7 @@ public class TelegramBot extends TelegramWebhookBot {
             try {
                 execute(message);
             } catch (TelegramApiException e) {
-                // Maybe log this
-                System.out.println(e.getCause() +" " + e.getMessage());
+                log.error(e.getCause() +" " + e.getMessage());
             }
         }
     }

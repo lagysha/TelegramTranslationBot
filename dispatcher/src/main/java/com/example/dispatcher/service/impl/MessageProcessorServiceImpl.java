@@ -9,6 +9,7 @@ import com.example.dispatcher.controller.enums.NextAction;
 import com.example.dispatcher.dto.LangType;
 import com.example.dispatcher.dto.TranslationSettingDto;
 import com.example.dispatcher.dto.UserDto;
+import com.example.dispatcher.dto.group.GroupCreateRequest;
 import com.example.dispatcher.dto.group.GroupDto;
 import com.example.dispatcher.dto.RequestUser;
 import com.example.dispatcher.dto.UserDto;
@@ -32,48 +33,17 @@ public class MessageProcessorServiceImpl implements MessageProcessor {
     private final TranslateApiClient translateApiClient;
 
     @Override
-    public String getGroupsByName(String groupName) {
-        List<GroupDto> retrievedGroupDtos = groupClient.getGroup(groupName);
-        if(retrievedGroupDtos.isEmpty()){
-            return "Nothing was found";
-        }
-        return retrievedGroupDtos.stream().map(groupDto -> "https://t.me/"+ groupDto.getResult().getUsername()).collect(Collectors.joining("\n"));
-    }
-
-    @Override
-    public String getUserGroups(Update update) {
-        return null;
-    }
-
-    @Override
     public UserDto registerUser(Update update) {
         User telegramUser = update.getMessage().getFrom();
         RequestUser requestUser = userMapper.telegramUserToRequestUser(telegramUser);
         requestUser.setNextAction(NextAction.NONE);
-        var response = userApiClient.saveUser(requestUser);
-        return response.getBody();
+        return userApiClient.saveUser(requestUser);
     }
 
     @Override
     public UserDto findAppUser(Update update) {
         Long userTelegramId = update.getMessage().getFrom().getId();
-        var response = userApiClient.getUserByTelegramId(userTelegramId);
-        return response.getBody();
-    }
-
-    @Override
-    public GroupDto saveGroupByName(String groupName, Long adminId) {
-        return groupClient.saveGroupByName(groupName,adminId);
-    }
-
-    @Override
-    public GroupDto findGroupByName(String groupName) {
-        return groupClient.findGroup(groupName);
-    }
-
-    @Override
-    public String verifyGroup(String name) {
-        return groupClient.verifyGroup(name);
+        return userApiClient.getUserByTelegramId(userTelegramId);
     }
 
     @Override
@@ -83,7 +53,7 @@ public class MessageProcessorServiceImpl implements MessageProcessor {
 
     @Override
     public GroupDto saveGroupById(Long groupId, Long adminId) {
-        return groupClient.saveGroupById(groupId,adminId);
+        return groupClient.saveGroupById(new GroupCreateRequest(groupId,adminId));
     }
 
     @Override

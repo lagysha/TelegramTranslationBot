@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserApiClient {
 
     @PostMapping()
-    ResponseEntity<UserDto> saveUser(@RequestBody RequestUser user);
+    UserDto saveUser(@RequestBody RequestUser user);
 
     @GetMapping()
-    ResponseEntity<UserDto> getUserByTelegramId(@RequestParam Long telegramId);
+    UserDto getUserByTelegramId(@RequestParam Long telegramId);
 
     @GetMapping()
-    ResponseEntity<UserDto> getUserById(@RequestParam Long id);
+    UserDto getUserById(@RequestParam Long id);
 
     @GetMapping("/unban")
     ResponseEntity<String> unbanUser(@RequestParam String groupName,@RequestParam Long userId);

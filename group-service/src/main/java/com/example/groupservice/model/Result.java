@@ -9,6 +9,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class Result{
     private Long id;
     private String title;
