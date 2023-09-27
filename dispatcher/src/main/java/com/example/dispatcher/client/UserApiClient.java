@@ -23,15 +23,6 @@ public interface UserApiClient {
     @GetMapping()
     UserDto getUserByTelegramId(@RequestParam Long telegramId);
 
-    @GetMapping()
-    UserDto getUserById(@RequestParam Long id);
-
-    @GetMapping("/unban")
-    ResponseEntity<String> unbanUser(@RequestParam String groupName,@RequestParam Long userId);
-
-    @GetMapping("/verifyBotStatus")
-    ResponseEntity<String> verifyBotStatus(@RequestParam String groupName);
-
     @PostMapping("/update")
     UserDto updateUser(@Valid @RequestBody RequestUser user);
 }

@@ -1,6 +1,5 @@
 package com.example.userservice.entity;
 
-import com.example.userservice.entity.enums.NextAction;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,8 +32,4 @@ public class User {
 
     @Column(name = "last_name")
     private String lastName;
-
-    @Column(name = "next_action", columnDefinition = "VARCHAR(20) DEFAULT 'NONE'")
-    @Enumerated(EnumType.STRING)
-    private NextAction nextAction = NextAction.NONE; // default value is NONE during persisting an entity
 }
