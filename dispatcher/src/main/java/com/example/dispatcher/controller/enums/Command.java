@@ -2,13 +2,10 @@ package com.example.dispatcher.controller.enums;
 
 public enum Command {
     HELP("/help"),
-    LIST("/list"),
-    ADDBOT("/addBot"),
-    LANGUAGE("/language"),
-    START("/start"),
-    STOP("/stop");
+    LIST("/languages"),
+    GETSTARTED("/getStarted"),
+    START("/start");
     private final String value;
-
     Command(String value){
         this.value = value;
     }

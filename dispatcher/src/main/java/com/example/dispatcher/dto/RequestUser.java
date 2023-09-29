@@ -1,6 +1,5 @@
 package com.example.dispatcher.dto;
 
-import com.example.dispatcher.controller.enums.NextAction;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,14 +19,8 @@ public class RequestUser {
     @NotEmpty
     private String username;
 
+    @NotEmpty
     private String firstName;
 
     private String lastName;
-
-    private NextAction nextAction;
-
-    public RequestUser(Long id, String username) {
-        this.id = id;
-        this.username = username;
-    }
 }

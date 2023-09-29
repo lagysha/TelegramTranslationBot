@@ -2,26 +2,21 @@ package com.example.dispatcher.service.impl;
 
 
 import com.example.dispatcher.client.GroupClient;
-import com.example.dispatcher.client.UserApiClient;
-
 import com.example.dispatcher.client.TranslateApiClient;
-import com.example.dispatcher.controller.enums.NextAction;
-import com.example.dispatcher.dto.LangType;
-import com.example.dispatcher.dto.TranslationSettingDto;
+import com.example.dispatcher.client.UserApiClient;
+import com.example.dispatcher.dto.RequestUser;
+import com.example.dispatcher.dto.TranslationRequestDto;
 import com.example.dispatcher.dto.UserDto;
 import com.example.dispatcher.dto.group.GroupCreateRequest;
 import com.example.dispatcher.dto.group.GroupDto;
-import com.example.dispatcher.dto.RequestUser;
-import com.example.dispatcher.dto.UserDto;
 import com.example.dispatcher.mapper.UserMapper;
 import com.example.dispatcher.service.MessageProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import org.telegram.telegrambots.meta.api.objects.User;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +31,6 @@ public class MessageProcessorServiceImpl implements MessageProcessor {
     public UserDto registerUser(Update update) {
         User telegramUser = update.getMessage().getFrom();
         RequestUser requestUser = userMapper.telegramUserToRequestUser(telegramUser);
-        requestUser.setNextAction(NextAction.NONE);
         return userApiClient.saveUser(requestUser);
     }
 
@@ -57,22 +51,12 @@ public class MessageProcessorServiceImpl implements MessageProcessor {
     }
 
     @Override
-    public String translate(Long groupId, String text) {
-        return translateApiClient.translate(groupId,text);
+    public String translate(TranslationRequestDto translationRequest) {
+        return translateApiClient.translate(translationRequest);
     }
 
     @Override
-    public Object addSetting(TranslationSettingDto translationSettingDto) {
-        return translateApiClient.addSetting(translationSettingDto);
-    }
-
-    @Override
-    public List<LangType> getLangTypes() {
+    public List<String> getLangTypes() {
         return translateApiClient.getLangTypes();
-    }
-
-    @Override
-    public UserDto updateUser(RequestUser requestUser) {
-        return userApiClient.updateUser(requestUser);
     }
 }

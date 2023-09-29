@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class Result{
     private Long id;
     private String title;
-    //@Indexed(unique = true)
     private String username;
     private String type;
     private ArrayList<String> active_usernames;

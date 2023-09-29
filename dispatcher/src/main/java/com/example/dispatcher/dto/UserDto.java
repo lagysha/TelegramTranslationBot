@@ -1,6 +1,5 @@
 package com.example.dispatcher.dto;
 
-import com.example.dispatcher.controller.enums.NextAction;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -25,9 +24,9 @@ public class UserDto {
     @NotEmpty
     private String username;
 
+    @NotEmpty
     private String firstName;
 
+    @NotEmpty
     private String lastName;
-
-    private NextAction nextAction; // default value is NONE during persisting an entity
 }

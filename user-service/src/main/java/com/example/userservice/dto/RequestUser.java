@@ -1,6 +1,5 @@
 package com.example.userservice.dto;
 
-import com.example.userservice.entity.enums.NextAction;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,9 +17,8 @@ public class RequestUser {
     @NotEmpty
     private String username;
 
+    @NotEmpty
     private String firstName;
 
     private String lastName;
-
-    private NextAction nextAction;
 }
