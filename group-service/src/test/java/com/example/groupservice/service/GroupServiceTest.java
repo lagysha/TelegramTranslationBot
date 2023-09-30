@@ -83,7 +83,7 @@ public class GroupServiceTest {
 
     @Test
     @Order(4)
-    @DisplayName("saveGroupById returns group by non-existing id")
+    @DisplayName("saveGroupById saves group by non-existing id in DataBase")
     public void saveGroupById() {
         GroupCreateRequest createRequest = new GroupCreateRequest(2L,2L);
         Mockito.when(groupRepository.findByGroupId(2L)).thenReturn(Optional.empty());
@@ -100,8 +100,8 @@ public class GroupServiceTest {
 
     @Test
     @Order(5)
-    @DisplayName("saveGroupById does not return group by non-existing id")
-    public void saveGroupByNonExistingId() {
+    @DisplayName("saveGroupById does not save group by existing id in DataBase")
+    public void saveGroupByExistingId() {
         GroupCreateRequest createRequest = new GroupCreateRequest(1L,1L);
         Mockito.when(groupRepository.findByGroupId(1L)).thenReturn(Optional.of(testGroup));
 

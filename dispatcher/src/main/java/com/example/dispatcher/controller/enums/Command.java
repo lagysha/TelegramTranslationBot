@@ -3,8 +3,7 @@ package com.example.dispatcher.controller.enums;
 public enum Command {
     HELP("/help"),
     LIST("/languages"),
-    GETSTARTED("/getStarted"),
-    START("/start");
+    GETSTARTED("/getStarted");
     private final String value;
     Command(String value){
         this.value = value;

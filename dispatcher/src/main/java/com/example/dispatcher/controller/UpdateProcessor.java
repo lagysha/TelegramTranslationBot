@@ -98,11 +98,16 @@ public class UpdateProcessor {
             String repliedText = update.getMessage().getReplyToMessage().getText();
             String text = update.getMessage().getText();
             String[] languages = text.split(" ");
-            if(languages.length!=3){
+            if(languages.length!=3 && languages.length!=2){
                 output = "Something went wrong with your input. Maybe you made a mistake. Type /help to see again command usage";
             }else {
                 try {
-                    output = messageProcessorService.translate(new TranslationRequestDto(languages[1], languages[2], repliedText));
+                    if(languages.length==3) {
+                        output = messageProcessorService.translate(new TranslationRequestDto(languages[1], languages[2], repliedText));
+                    }
+                    else {
+                        output = messageProcessorService.translate(new TranslationRequestDto(null, languages[1], repliedText));
+                    }
                 }catch (Exception e){
                     output = extractErrorMessage(e.getMessage());
                 }
@@ -144,8 +149,6 @@ public class UpdateProcessor {
 
         if (HELP.equals(serviceCommand)) {
             return help();
-        } else if (START.equals(serviceCommand)) {
-            return "Hi! To see all available commands type /help";
         } else if (GETSTARTED.equals(serviceCommand)) {
             return "Hi! Please follow instructions to configure bot\n"
                     + "1. Open group settings \n"
@@ -163,7 +166,7 @@ public class UpdateProcessor {
         return "All available commands:\n"
                 + "/getStarted - instructions how to add bot\n"
                 + "/languages - to view all supported languages\n"
-                + "/translate <lang1> <lang2> - reply to a message to translate\"\n" +
-                "For example: /translate en fr";
+                + "/translate <lang1>(optional) <lang2> - reply to a message to translate\n" +
+                "For example: /translate en fr or /translate fr";
     }
 }

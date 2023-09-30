@@ -38,7 +38,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public GroupDto saveGroupById(GroupCreateRequest groupCreateRequest) {
-        groupRepository.findByGroupId(groupCreateRequest.getGroupId()).ifPresent(user -> {
+        groupRepository.findByGroupId(groupCreateRequest.getGroupId()).ifPresent(group -> {
             throw new GroupAlreadyExistsException("Group with id = " + groupCreateRequest.getGroupId() + " already exists");
         });
         Group retrievedGroup = telegramClient.getTelegramGroup(groupCreateRequest.getGroupId());
