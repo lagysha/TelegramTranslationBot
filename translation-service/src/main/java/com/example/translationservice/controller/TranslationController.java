@@ -1,7 +1,7 @@
 package com.example.translationservice.controller;
 
 import com.example.translationservice.dto.TranslationRequestDto;
-import com.example.translationservice.service.TranslationService;
+import com.example.translationservice.service.impl.TranslationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TranslationController {
 
-    private final TranslationService translationService;
+    private final TranslationServiceImpl translationServiceImpl;
 
     @PostMapping("/translate")
     public ResponseEntity<String> translate(@RequestBody TranslationRequestDto translationRequest) {
-        return ResponseEntity.ok(translationService.translate(translationRequest));
+        return ResponseEntity.ok(translationServiceImpl.translate(translationRequest));
     }
 
     @GetMapping("/lang")
     public ResponseEntity<List<String>> getLangTypes() {
-        return ResponseEntity.ok(translationService.getLangTypes());
+        return ResponseEntity.ok(translationServiceImpl.getLangTypes());
     }
 }
