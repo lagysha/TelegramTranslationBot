@@ -36,6 +36,6 @@ To start using the Telegram Translation Bot, follow these steps:
 - 2.1 Register azure text transaltor
 - 2.2 Register telegram bot
 - 2.3 Integrate registered APIs with this project through environment variables
-4. Build and run the project.
+3. Build and run the project.
 
 ---
