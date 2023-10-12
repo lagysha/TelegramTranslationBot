@@ -25,7 +25,7 @@ Telegram Translation Bot leverages several powerful technologies and frameworks 
 - ![Spring Data Logo](https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=for-the-badge&logo=spring&logoColor=white) **Spring Data JPA**: Part of the Spring Data family, it simplifies JPA-based repository implementation.
 - ![Azure Logo](https://img.shields.io/badge/Azure%20AI%20Text%20Translation-6DB33F?style=for-the-badge&logo=microsoft-azure&logoColor=white) **Azure AI Text Translation**: Microsoft Azure's cloud-based machine translation service, offering fast and accurate translations.
 - ![MongoDB Logo](https://img.shields.io/badge/MongoDB-6DB33F?style=for-the-badge&logo=mongodb&logoColor=white) **MongoDB**: A popular NoSQL document-oriented database known for its flexibility and scalability.
-- ![Telegram Icon](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white) **Telegrambots**: Streamlines Telegram bot creation with Spring Boot, offering webhook registration and message handling.
+- ![Telegram Icon](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white) **TelegramBotAPI**: Streamlines Telegram bot creation with Spring Boot, offering webhook registration and message handling.
 
 ## Getting Started
 
